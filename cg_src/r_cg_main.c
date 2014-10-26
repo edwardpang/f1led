@@ -47,6 +47,15 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
+typedef enum {
+	APP_STATE_CALIBRATE = 0,
+	APP_STATE_MODE_1,
+	APP_STATE_MODE_2,
+	APP_STATE_NUM
+} eAppState;
+
+eAppState state;
+
 void LedOn ( ) {
 	P0 = _00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0;
 }
@@ -70,7 +79,16 @@ void main(void)
     /* Start user code. Do not edit comment generated here */
     while (1U)
     {
-
+		switch (state) {
+			case APP_STATE_CALIBRATE:
+				break;
+				
+			case APP_STATE_MODE_1:
+				break;
+				
+			case APP_STATE_MODE_2:
+				break;
+		}
     }
     /* End user code. Do not edit comment generated here */
 }
@@ -84,6 +102,8 @@ void R_MAIN_UserInit(void)
 {
     /* Start user code. Do not edit comment generated here */
     EI();
+	LedOff ( );
+	state = APP_STATE_CALIBRATE;
     /* End user code. Do not edit comment generated here */
 }
 
