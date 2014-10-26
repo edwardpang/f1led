@@ -79,7 +79,7 @@ void R_TAU0_Create(void)
     TMPR001 = 1U;
     /* Channel 0 is used to measure input pulse low-/high-width */
     TMR00H = _80_TAU_CLOCK_SELECT_CKM1 | _00_TAU_CLOCK_MODE_CKS | _00_TAU_COMBINATION_SLAVE | _02_TAU_TRIGGER_TIMN_BOTH;
-    TMR00L = _C0_TAU_TIMN_EDGE_BOTH_HIGH | _0C_TAU_MODE_HIGHLOW_MEASURE;
+    TMR00L = _80_TAU_TIMN_EDGE_BOTH_LOW | _0C_TAU_MODE_HIGHLOW_MEASURE;
     TO0 &= (uint8_t)~_01_TAU_CH0_OUTPUT_VALUE_1;
     TOE0 &= (uint8_t)~_01_TAU_CH0_OUTPUT_ENABLE;
     NFEN1 &= (uint8_t)~_01_TAU_CH0_NOISE_ON;    /* disable using noise filter of TI00 pin input signal */

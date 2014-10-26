@@ -4923,7 +4923,7 @@ cl0rmf.lib
               &lt;/DataElement&gt;
               &lt;DataElement key="Attach" value="TauPwmMaster"&gt;
               &lt;/DataElement&gt;
-              &lt;DataElement key="MutexType" value="NoMutex"&gt;
+              &lt;DataElement key="MutexType" value="NoMutex, PinMutex"&gt;
               &lt;/DataElement&gt;
               &lt;DataElement key="Visible" value="True"&gt;
               &lt;/DataElement&gt;
@@ -4945,7 +4945,7 @@ cl0rmf.lib
               &lt;/DataElement&gt;
               &lt;DataElement key="Attach" value="TauOneShotSoftMaster"&gt;
               &lt;/DataElement&gt;
-              &lt;DataElement key="MutexType" value="NoMutex"&gt;
+              &lt;DataElement key="MutexType" value="NoMutex, PinMutex"&gt;
               &lt;/DataElement&gt;
               &lt;DataElement key="Visible" value="True"&gt;
               &lt;/DataElement&gt;
@@ -4967,7 +4967,7 @@ cl0rmf.lib
               &lt;/DataElement&gt;
               &lt;DataElement key="Attach" value="TauOneShotExternalMaster"&gt;
               &lt;/DataElement&gt;
-              &lt;DataElement key="MutexType" value="NoMutex"&gt;
+              &lt;DataElement key="MutexType" value="NoMutex, PinMutex"&gt;
               &lt;/DataElement&gt;
               &lt;DataElement key="Visible" value="True"&gt;
               &lt;/DataElement&gt;
@@ -6871,7 +6871,7 @@ cl0rmf.lib
             &lt;SerializableData name="ExternalEventEdge"&gt;
               &lt;DataElement key="ContentItemCount" value="2"&gt;
               &lt;/DataElement&gt;
-              &lt;DataElement key="SelectedContentItem" value="Highlevel"&gt;
+              &lt;DataElement key="SelectedContentItem" value="Lowlevel"&gt;
               &lt;/DataElement&gt;
               &lt;SerializableData name="ContentItem1"&gt;
                 &lt;DataElement key="Pin" value=""&gt;
