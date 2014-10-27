@@ -47,8 +47,16 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
+#define TIME_PERIOD_100MS			1
+#define TIME_PERIOD_1S				10
+#define TIME_PERIOD_CALIBRATION		(10 * TIME_PERIOD_1S)
+#define TIME_PERIOD_LED_BLINK		(5 * TIME_PERIOD_100MS)
+
 typedef enum {
-	APP_STATE_CALIBRATE = 0,
+	APP_STATE_INIT = 0,
+	APP_STATE_PRE_CALIBRATION,
+	APP_STATE_CALIBRATION,
+	APP_STATE_POST_CALIBRATION,
 	APP_STATE_MODE_1,
 	APP_STATE_MODE_2,
 	APP_STATE_NUM
@@ -56,14 +64,45 @@ typedef enum {
 
 eAppState state;
 
+boolean ledOnOff;
+boolean tickFlag;
+short tickCnt;
+
+short throttle;
+
+void tickCntUpdate (void) {
+	if (tickFlag) {
+		tickCnt ++;
+		tickFlag = 0;
+	}
+}
+
+void tickCntClear (void) {
+	tickCnt = 0;
+}
+
 void LedOn ( ) {
 	P0 = _00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0;
+	ledOnOff = true;
 }
 
 void LedOff ( ) {
 	P0 = _01_Pn0_OUTPUT_1 | _02_Pn1_OUTPUT_1 | _04_Pn2_OUTPUT_1 | _08_Pn3_OUTPUT_1 | _10_Pn4_OUTPUT_1;
-	
+	ledOnOff = false;
 }
+
+void LedInit ( ) {
+	LedOff ( );
+	ledOnOff = false;
+}
+
+void LedToggle ( ) {
+	if (ledOnOff)
+		LedOff ( );
+	else
+		LedOn ( );
+}
+
 /* End user code. Do not edit comment generated here */
 
 void R_MAIN_UserInit(void);
@@ -77,10 +116,36 @@ void main(void)
 {
     R_MAIN_UserInit();
     /* Start user code. Do not edit comment generated here */
-    while (1U)
-    {
+    while (1U) {
+		tickCntUpdate ( );
 		switch (state) {
-			case APP_STATE_CALIBRATE:
+			case APP_STATE_INIT:
+				// Init Global Variable
+				tickFlag = false;
+				tickCntClear ( );
+				
+				// Init LED
+				LedInit ( );
+
+				// Start Timer
+				R_TAU0_Channel1_Start ( );
+				state = APP_STATE_PRE_CALIBRATION;
+				break;
+
+			case APP_STATE_PRE_CALIBRATION:
+				if (tickCnt == TIME_PERIOD_LED_BLINK) {
+					tickCntClear ( );
+					LedToggle ( );
+				}
+				if (tickCnt == TIME_PERIOD_CALIBRATION) {
+					state = APP_STATE_CALIBRATION;
+				}
+				break;
+				
+			case APP_STATE_CALIBRATION:
+				break;
+				
+			case APP_STATE_POST_CALIBRATION:
 				break;
 				
 			case APP_STATE_MODE_1:
@@ -102,8 +167,6 @@ void R_MAIN_UserInit(void)
 {
     /* Start user code. Do not edit comment generated here */
     EI();
-	LedOff ( );
-	state = APP_STATE_CALIBRATE;
     /* End user code. Do not edit comment generated here */
 }
 

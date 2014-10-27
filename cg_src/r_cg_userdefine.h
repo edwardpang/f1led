@@ -33,5 +33,7 @@ User definitions
 ***********************************************************************************************************************/
 
 /* Start user code for function. Do not edit comment generated here */
+#define true	1
+#define false	0
 /* End user code. Do not edit comment generated here */
 #endif
