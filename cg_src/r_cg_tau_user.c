@@ -50,6 +50,7 @@ Global variables and functions
 volatile uint32_t g_tau0_ch0_width = 0U;
 /* Start user code for global. Do not edit comment generated here */
 extern boolean tickFlag;
+extern unsigned short u16Throttle;
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -71,6 +72,7 @@ __interrupt static void r_tau0_channel0_interrupt(void)
         g_tau0_ch0_width = (uint32_t)TDR00H * 0x100U + g_tau0_ch0_width;
     }
     /* Start user code. Do not edit comment generated here */
+	u16Throttle = (unsigned short) (g_tau0_ch0_width & 0x0000FFFF);
     /* End user code. Do not edit comment generated here */
 }
 /***********************************************************************************************************************

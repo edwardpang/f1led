@@ -68,7 +68,19 @@ boolean ledOnOff;
 boolean tickFlag;
 short tickCnt;
 
-short throttle;
+/*
+Test with blue colour Throttle Generator.
+When display shows 2200, throttle variable = 44xxx
+When display shows 1500, throttle variable = 30xxx
+When display shows 800, throttle variable = 16xxx
+ */
+#define THROTTLE_READING_MIN	16000
+#define THROTTLE_READING_MAX	45000
+
+unsigned short u16Throttle;
+unsigned short u16ThrottleMiddle;
+unsigned short u16ThrottleUpperBound;
+unsigned short u16ThrottleLowerBound;
 
 void tickCntUpdate (void) {
 	if (tickFlag) {
@@ -123,32 +135,43 @@ void main(void)
 				// Init Global Variable
 				tickFlag = false;
 				tickCntClear ( );
+				u16Throttle = 0;
 				
 				// Init LED
 				LedInit ( );
+				LedOn ( );
 
 				// Start Timer
+				R_TAU0_Channel0_Start ( );
 				R_TAU0_Channel1_Start ( );
 				state = APP_STATE_PRE_CALIBRATION;
 				break;
 
 			case APP_STATE_PRE_CALIBRATION:
-				if (tickCnt == TIME_PERIOD_LED_BLINK) {
-					tickCntClear ( );
-					LedToggle ( );
-				}
-				if (tickCnt == TIME_PERIOD_CALIBRATION) {
+				// Make Sure Throttle is connected
+				if (u16Throttle > THROTTLE_READING_MIN) {
 					state = APP_STATE_CALIBRATION;
+					LedOff ( );
+					tickCntClear ( );
 				}
 				break;
 				
 			case APP_STATE_CALIBRATION:
+				if (tickCnt == TIME_PERIOD_CALIBRATION) {
+					tickCntClear ( );
+					state = APP_STATE_POST_CALIBRATION;
+				}
 				break;
 				
 			case APP_STATE_POST_CALIBRATION:
+				state = APP_STATE_MODE_1;
 				break;
 				
 			case APP_STATE_MODE_1:
+				if (tickCnt == TIME_PERIOD_LED_BLINK) {
+					tickCntClear ( );
+					LedToggle ( );
+				}
 				break;
 				
 			case APP_STATE_MODE_2:
