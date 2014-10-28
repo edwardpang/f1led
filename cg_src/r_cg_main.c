@@ -40,7 +40,6 @@ Includes
 #include "r_cg_port.h"
 #include "r_cg_tau.h"
 /* Start user code for include. Do not edit comment generated here */
-#include "SwTimer.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -49,6 +48,26 @@ Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 
+#define TIME_PERIOD_TICK			1							// Tick 25ms
+#define TIME_PERIOD_100MS			(4 * TIME_PERIOD_TICK)
+#define TIME_PERIOD_1S				(10 * TIME_PERIOD_100MS)
+
+#define TIME_PERIOD_PRE_CALIBRATION		(9 * TIME_PERIOD_1S)
+#define TIME_PERIOD_CALIBRATION			(1 * TIME_PERIOD_1S)
+
+#define TIME_PERIOD_SPEED_PATTERN_1		(5 * TIME_PERIOD_100MS)
+#define TIME_PERIOD_SPEED_PATTERN_2		(4 * TIME_PERIOD_100MS)
+#define TIME_PERIOD_SPEED_PATTERN_3		(3 * TIME_PERIOD_100MS)
+#define TIME_PERIOD_SPEED_PATTERN_4		(2 * TIME_PERIOD_100MS)
+#define TIME_PERIOD_SPEED_PATTERN_5		(1 * TIME_PERIOD_100MS)
+
+#define TIME_PERIOD_HALT_PATTERN		(1 * TIME_PERIOD_100MS)
+
+#define TIME_PERIOD_LED_CALIBRATION_PATTERN		(2 * TIME_PERIOD_TICK)
+#define TIME_PERIOD_LED_TEST_PATTERN	(5 * TIME_PERIOD_100MS)
+
+uint16_t u16SwTimerCnt_LedBlink;
+uint16_t u16SwTimerCnt_Duration;
 
 typedef enum {
 	APP_STATE_INIT = 0,
@@ -62,7 +81,6 @@ typedef enum {
 } eAppState;
 eAppState state;
 
-boolean ledOnOff;
 boolean bTickFlag;
 boolean bPolarity;
 
@@ -87,28 +105,32 @@ uint16_t u16ThrottleMiddleUpperBound;
 uint16_t u16ThrottleMiddleLowerBound;
 uint32_t u32ThrottleCalculation;
 
-void LedOn ( ) {
-	P0 = _00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0;
-	ledOnOff = true;
-}
-
-void LedOff ( ) {
-	P0 = _01_Pn0_OUTPUT_1 | _02_Pn1_OUTPUT_1 | _04_Pn2_OUTPUT_1 | _08_Pn3_OUTPUT_1 | _10_Pn4_OUTPUT_1;
-	ledOnOff = false;
-}
+#define LED_ON		(_00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0)
+#define LED_OFF		(_01_Pn0_OUTPUT_1 | _02_Pn1_OUTPUT_1 | _04_Pn2_OUTPUT_1 | _08_Pn3_OUTPUT_1 | _10_Pn4_OUTPUT_1)
+#define LED_PORT	P0
 
 void LedInit ( ) {
-	LedOff ( );
-	ledOnOff = false;
+	LED_PORT = LED_OFF;
 }
 
 void LedToggle ( ) {
-	if (ledOnOff)
-		LedOff ( );
+	if (LED_PORT == LED_ON)
+		LED_PORT = LED_OFF;
 	else
-		LedOn ( );
+		LED_PORT = LED_ON;
 }
 
+void swTimerUpdate (void) {
+	uint16_t	i;
+	
+	if (bTickFlag) {
+		if (u16SwTimerCnt_LedBlink)
+			u16SwTimerCnt_LedBlink --;			
+		if (u16SwTimerCnt_Duration)
+			u16SwTimerCnt_Duration --;
+		bTickFlag = 0;
+	}
+}
 /* End user code. Do not edit comment generated here */
 
 void R_MAIN_UserInit(void);
@@ -131,32 +153,33 @@ void main(void)
 				// The boolean bPolarity should be read from P137 later
 				// TRUE means input logic high, normal polarity
 				bPolarity = true;
-				swTimerClearAll ( );
+				u16SwTimerCnt_LedBlink = 0;			
+				u16SwTimerCnt_Duration = 0;
 				u16Throttle = 0;
 				
 				// Init LED
 				LedInit ( );
 
 				// Start Timer
-				swTimerSet (SW_TIMER_STATE_DURATION, TIME_PERIOD_PRE_CALIBRATION);
-				swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_LED_CALIBRATION_PATTERN);
+				u16SwTimerCnt_LedBlink = TIME_PERIOD_LED_CALIBRATION_PATTERN;
+				u16SwTimerCnt_Duration = TIME_PERIOD_PRE_CALIBRATION;
 				R_TAU0_Channel0_Start ( );
 				R_TAU0_Channel1_Start ( );
 				state = APP_STATE_PRE_CALIBRATION;
 				break;
 
 			case APP_STATE_PRE_CALIBRATION:
-				if (swTimerIsTimeout (SW_TIMER_STATE_DURATION)) {
+				if (!u16SwTimerCnt_Duration) {
 					// Make Sure Throttle is connected
 					if (u16Throttle > THROTTLE_READING_MIN) {
-						LedOff ( );
+						LED_PORT = LED_OFF;
 						u32ThrottleCalculation = u16Throttle;
 					}
-					swTimerSet (SW_TIMER_STATE_DURATION, TIME_PERIOD_CALIBRATION);
+					u16SwTimerCnt_Duration = TIME_PERIOD_CALIBRATION;
 					state = APP_STATE_CALIBRATION;					
 				}
-				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
-					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_LED_CALIBRATION_PATTERN);
+				if (!u16SwTimerCnt_LedBlink) {
+					u16SwTimerCnt_LedBlink = TIME_PERIOD_LED_CALIBRATION_PATTERN;
 					LedToggle ( );				
 				}
 				break;
@@ -164,11 +187,11 @@ void main(void)
 			case APP_STATE_CALIBRATION:
 				u32ThrottleCalculation += u16Throttle;
 				u32ThrottleCalculation >>= 1;
-				if (swTimerIsTimeout (SW_TIMER_STATE_DURATION)) {
+				if (!u16SwTimerCnt_Duration) {
 					state = APP_STATE_POST_CALIBRATION;
 				}
-				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
-					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_LED_CALIBRATION_PATTERN);
+				if (!u16SwTimerCnt_LedBlink) {
+					u16SwTimerCnt_LedBlink = TIME_PERIOD_LED_CALIBRATION_PATTERN;
 					LedToggle ( );				
 				}
 				break;
@@ -178,42 +201,43 @@ void main(void)
 				u16ThrottleMiddleUpperBound = u16ThrottleMiddle + THROTTLE_READING_TOLERANCE;
 				u16ThrottleMiddleLowerBound = u16ThrottleMiddle - THROTTLE_READING_TOLERANCE;
 				if (u16ThrottleMiddle > THROTTLE_READING_MAX || u16ThrottleMiddle < THROTTLE_READING_MIN) {
-					//swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_HALT_PATTERN);
-					LedOn ( );
+					//u16SwTimerCnt_LedBlink = TIME_PERIOD_HALT_PATTERN;
+					LED_PORT = LED_ON;
 					state = APP_STATE_HALT;
 				}
 				else {
-					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
+					u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
 					state = APP_STATE_MODE_1;
 				}
 				break;
 				
 			case APP_STATE_MODE_1:
-				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
+				if (!u16SwTimerCnt_LedBlink) {
 					if (bPolarity) {
 						if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP5))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_5);
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_5;
 						else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP4))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_4);
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_4;
 						else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP3))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_3);
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_3;
 						else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP2))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_2);
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_2;
 						else //if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP1))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
 					}
-/*					else {
-						if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP1))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
-						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP2))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_2);
-						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP3))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_3);
+					else {
+						
+						if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP5))
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_5;
 						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP4))
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_4);
-						else
-							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_5);
-					}*/
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_4;
+						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP3))
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_3;
+						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP2))
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_2;
+						else //if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP1))
+							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;	
+					}
 					LedToggle ( );
 				}
 				break;
@@ -224,7 +248,7 @@ void main(void)
 			case APP_STATE_HALT:
 				/*
 				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
-					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_HALT_PATTERN);
+					u16SwTimerCnt_LedBlink = TIME_PERIOD_HALT_PATTERN);
 					LedToggle ( );
 				}
 				*/
