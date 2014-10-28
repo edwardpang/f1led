@@ -54,6 +54,7 @@ Global variables and functions
 
 #define TIME_PERIOD_PRE_CALIBRATION		(9 * TIME_PERIOD_1S)
 #define TIME_PERIOD_CALIBRATION			(1 * TIME_PERIOD_1S)
+#define TIME_PERIOD_MODE2_CYCLE1		(3 * TIME_PERIOD_1S)
 
 #define TIME_PERIOD_SPEED_PATTERN_1		(5 * TIME_PERIOD_100MS)
 #define TIME_PERIOD_SPEED_PATTERN_2		(4 * TIME_PERIOD_100MS)
@@ -83,6 +84,7 @@ eAppState state;
 
 boolean bTickFlag;
 boolean bPolarity;
+boolean bMode2Cycle1;
 
 /*
 Test with blue colour Throttle Generator.
@@ -196,7 +198,6 @@ void main(void)
 							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
 					}
 					else {
-						
 						if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP5))
 							u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_5;
 						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP4))
@@ -213,6 +214,42 @@ void main(void)
 				break;
 				
 			case APP_STATE_MODE_2:
+				if (bPolarity) {
+					if (u16Throttle > u16ThrottleMiddle) {
+						LED_PORT = LED_ON;
+						u16SwTimerCnt_Duration = TIME_PERIOD_MODE2_CYCLE1;
+					}
+					else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP1)) {
+						LED_PORT = LED_OFF;
+						u16SwTimerCnt_Duration = TIME_PERIOD_MODE2_CYCLE1;
+					}
+					else if (u16SwTimerCnt_Duration) {
+						LED_PORT = LED_ON;
+						u16SwTimerCnt_LedBlink = 0;
+					}
+					else if (!u16SwTimerCnt_LedBlink) {
+						u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
+						LedToggle ( );
+					}
+				}
+				else {
+					if (u16Throttle < u16ThrottleMiddle) {
+						LED_PORT = LED_ON;
+						u16SwTimerCnt_Duration = TIME_PERIOD_MODE2_CYCLE1;
+					}
+					else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP1)) {
+						LED_PORT = LED_OFF;
+						u16SwTimerCnt_Duration = TIME_PERIOD_MODE2_CYCLE1;
+					}
+					else if (u16SwTimerCnt_Duration) {
+						LED_PORT = LED_ON;
+						u16SwTimerCnt_LedBlink = 0;
+					}
+					else if (!u16SwTimerCnt_LedBlink) {
+						u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
+						LedToggle ( );
+					}
+				}
 				break;
 				
 			case APP_STATE_HALT:
