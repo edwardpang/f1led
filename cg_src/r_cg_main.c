@@ -101,17 +101,10 @@ When display shows 800, throttle variable = 16xxx
 
 uint16_t u16Throttle;
 uint16_t u16ThrottleMiddle;
-uint16_t u16ThrottleMiddleUpperBound;
-uint16_t u16ThrottleMiddleLowerBound;
-uint32_t u32ThrottleCalculation;
 
 #define LED_ON		(_00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0)
 #define LED_OFF		(_01_Pn0_OUTPUT_1 | _02_Pn1_OUTPUT_1 | _04_Pn2_OUTPUT_1 | _08_Pn3_OUTPUT_1 | _10_Pn4_OUTPUT_1)
-#define LED_PORT	P0
-
-void LedInit ( ) {
-	LED_PORT = LED_OFF;
-}
+#define LED_PORT	(P0)
 
 void LedToggle ( ) {
 	if (LED_PORT == LED_ON)
@@ -147,36 +140,18 @@ void main(void)
     while (1U) {
 		swTimerUpdate ( );
 		switch (state) {
-			case APP_STATE_INIT:
-				// Init Global Variable
-				bTickFlag = false;
-				// The boolean bPolarity should be read from P137 later
-				// TRUE means input logic high, normal polarity
-				bPolarity = true;
-				u16SwTimerCnt_LedBlink = 0;			
-				u16SwTimerCnt_Duration = 0;
-				u16Throttle = 0;
-				
-				// Init LED
-				LedInit ( );
-
-				// Start Timer
-				u16SwTimerCnt_LedBlink = TIME_PERIOD_LED_CALIBRATION_PATTERN;
-				u16SwTimerCnt_Duration = TIME_PERIOD_PRE_CALIBRATION;
-				R_TAU0_Channel0_Start ( );
-				R_TAU0_Channel1_Start ( );
-				state = APP_STATE_PRE_CALIBRATION;
-				break;
-
 			case APP_STATE_PRE_CALIBRATION:
 				if (!u16SwTimerCnt_Duration) {
 					// Make Sure Throttle is connected
 					if (u16Throttle > THROTTLE_READING_MIN) {
 						LED_PORT = LED_OFF;
-						u32ThrottleCalculation = u16Throttle;
+						u16SwTimerCnt_Duration = TIME_PERIOD_CALIBRATION;
+						state = APP_STATE_CALIBRATION;					
 					}
-					u16SwTimerCnt_Duration = TIME_PERIOD_CALIBRATION;
-					state = APP_STATE_CALIBRATION;					
+					else {
+						LED_PORT = LED_ON;
+						state = APP_STATE_HALT;
+					}
 				}
 				if (!u16SwTimerCnt_LedBlink) {
 					u16SwTimerCnt_LedBlink = TIME_PERIOD_LED_CALIBRATION_PATTERN;
@@ -185,8 +160,6 @@ void main(void)
 				break;
 				
 			case APP_STATE_CALIBRATION:
-				u32ThrottleCalculation += u16Throttle;
-				u32ThrottleCalculation >>= 1;
 				if (!u16SwTimerCnt_Duration) {
 					state = APP_STATE_POST_CALIBRATION;
 				}
@@ -197,11 +170,8 @@ void main(void)
 				break;
 				
 			case APP_STATE_POST_CALIBRATION:
-				u16ThrottleMiddle = (uint16_t) (u32ThrottleCalculation & 0x0000FFFF);
-				u16ThrottleMiddleUpperBound = u16ThrottleMiddle + THROTTLE_READING_TOLERANCE;
-				u16ThrottleMiddleLowerBound = u16ThrottleMiddle - THROTTLE_READING_TOLERANCE;
+				u16ThrottleMiddle = u16Throttle;
 				if (u16ThrottleMiddle > THROTTLE_READING_MAX || u16ThrottleMiddle < THROTTLE_READING_MIN) {
-					//u16SwTimerCnt_LedBlink = TIME_PERIOD_HALT_PATTERN;
 					LED_PORT = LED_ON;
 					state = APP_STATE_HALT;
 				}
@@ -246,12 +216,6 @@ void main(void)
 				break;
 				
 			case APP_STATE_HALT:
-				/*
-				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
-					u16SwTimerCnt_LedBlink = TIME_PERIOD_HALT_PATTERN);
-					LedToggle ( );
-				}
-				*/
 				break;
 		}
     }
@@ -267,7 +231,26 @@ void R_MAIN_UserInit(void)
 {
     /* Start user code. Do not edit comment generated here */
     EI();
-    /* End user code. Do not edit comment generated here */
+	
+	// Init Global Variable
+	bTickFlag = false;
+	// The boolean bPolarity should be read from P137 later
+	// TRUE means input logic high, normal polarity
+	bPolarity = true;
+	u16SwTimerCnt_LedBlink = 0;			
+	u16SwTimerCnt_Duration = 0;
+	u16Throttle = 0;
+
+	// Init LED
+	LED_PORT = LED_OFF;
+
+	// Start Timer
+	u16SwTimerCnt_LedBlink = TIME_PERIOD_LED_CALIBRATION_PATTERN;
+	u16SwTimerCnt_Duration = TIME_PERIOD_PRE_CALIBRATION;
+	R_TAU0_Channel0_Start ( );
+	R_TAU0_Channel1_Start ( );
+	state = APP_STATE_PRE_CALIBRATION;
+	/* End user code. Do not edit comment generated here */
 }
 
 /* Start user code for adding. Do not edit comment generated here */
