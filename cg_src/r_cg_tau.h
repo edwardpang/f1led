@@ -23,7 +23,7 @@
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
 * Description  : This file implements device driver for TAU module.
-* Creation Date: 26/10/2014
+* Creation Date: 28/10/2014
 ***********************************************************************************************************************/
 #ifndef TAU_H
 #define TAU_H
@@ -236,7 +236,7 @@ Macro definitions
 #define _23_TAU_TDR01L_VALUE                    (0x23U)
 #define _F4_TAU_TDR01H_VALUE                    (0xF4U)
 /* Clock divisor for TAU0 channel 1 */
-#define TAU0_CHANNEL1_DIVISOR                   (32U)     /* fCLK/2^5 */
+#define TAU0_CHANNEL1_DIVISOR                   (8U)      /* fCLK/2^3 */
 
 /***********************************************************************************************************************
 Typedef definitions

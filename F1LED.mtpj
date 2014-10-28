@@ -20,6 +20,7 @@
       <Name>Code Generator</Name>
       <Type>Category</Type>
       <ParentItem>5201c51f-1828-4945-b060-204bd47a16cd</ParentItem>
+      <Property>1fd6368e-accb-4e3b-a70e-80858910fde0</Property>
     </Instance>
     <Instance Guid="be4dd096-119b-4e54-bc8d-6cb29ad71f1b">
       <Name>r_cg_lk.dr</Name>
@@ -27,6 +28,22 @@
       <RelativePath>cg_src\r_cg_lk.dr</RelativePath>
       <TreeImageGuid>a4460d02-6943-4122-9169-dd699e916213</TreeImageGuid>
       <ParentItem>5201c51f-1828-4945-b060-204bd47a16cd</ParentItem>
+    </Instance>
+    <Instance Guid="e7473f74-3b1b-4069-8871-2108e97129ee">
+      <Name>SwTimer.h</Name>
+      <Type>File</Type>
+      <RelativePath>SwTimer.h</RelativePath>
+      <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
+      <ParentItem>5201c51f-1828-4945-b060-204bd47a16cd</ParentItem>
+      <Property>046f2a76-19a7-4302-ab49-f4660a951a12</Property>
+    </Instance>
+    <Instance Guid="0a1444f6-d98c-4f01-ac55-aa98600c3ae7">
+      <Name>SwTimer.c</Name>
+      <Type>File</Type>
+      <RelativePath>SwTimer.c</RelativePath>
+      <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
+      <ParentItem>5201c51f-1828-4945-b060-204bd47a16cd</ParentItem>
+      <Property>662989df-a6e7-40c2-b01b-5255a7be1bfd</Property>
     </Instance>
     <Instance Guid="5380afbf-25ad-406b-80ba-dbdc1b3f46fd">
       <Name>r_cg_main.c</Name>
@@ -150,16 +167,30 @@
     <Instance Guid="3e89e553-1f22-4058-ac2a-6c6739ecf470">
       <MemoCount>0</MemoCount>
     </Instance>
-    <Instance Guid="4477ca03-6ed2-40f9-8257-4fbaac11abc4">
+    <Instance Guid="974b69fc-53c0-4928-b979-a163dc81073b">
       <MemoCount>0</MemoCount>
     </Instance>
-    <Instance Guid="974b69fc-53c0-4928-b979-a163dc81073b">
+    <Instance Guid="711f6116-7191-4397-bb7a-67e1df825d69">
       <MemoCount>0</MemoCount>
     </Instance>
     <Instance Guid="a899d328-5c7b-4652-968c-7a3b286b56ff">
       <MemoCount>0</MemoCount>
     </Instance>
-    <Instance Guid="711f6116-7191-4397-bb7a-67e1df825d69">
+    <Instance Guid="4477ca03-6ed2-40f9-8257-4fbaac11abc4">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="662989df-a6e7-40c2-b01b-5255a7be1bfd">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="046f2a76-19a7-4302-ab49-f4660a951a12">
+      <MemoCount>0</MemoCount>
+    </Instance>
+  </Class>
+  <Class Guid="78a5c5cd-76cb-4bcc-a031-3020011fbc9a">
+    <Instance Guid="1fd6368e-accb-4e3b-a70e-80858910fde0">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="e2610eda-d65d-495a-a34e-bc79f6274b33">
       <MemoCount>0</MemoCount>
     </Instance>
   </Class>
@@ -218,7 +249,9 @@
       <SourceItemType7>CSource</SourceItemType7>
       <SourceItemGuid8>f80c0702-92cf-477e-858f-5fef0baa1e29</SourceItemGuid8>
       <SourceItemType8>CSource</SourceItemType8>
-      <SourceItemCount>9</SourceItemCount>
+      <SourceItemGuid9>0a1444f6-d98c-4f01-ac55-aa98600c3ae7</SourceItemGuid9>
+      <SourceItemType9>CSource</SourceItemType9>
+      <SourceItemCount>10</SourceItemCount>
       <VfiSourceItemCount>0</VfiSourceItemCount>
       <LastDeviceChangedCounter>0</LastDeviceChangedCounter>
     </Instance>
@@ -339,8 +372,9 @@ cl0rmf.lib
       <NumberOfLinesPerPage-DefaultValue>0</NumberOfLinesPerPage-DefaultValue>
       <TabWidth-DefaultValue>8</TabWidth-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8587872966388071299</TimeTagModified--0>
-      <AdditionalIncludePaths-0>cg_src
+      <TimeTagModified--0>-8587871208816340142</TimeTagModified--0>
+      <AdditionalIncludePaths-0>.
+cg_src
 </AdditionalIncludePaths-0>
       <AssemblyFile-0>NotOutput</AssemblyFile-0>
       <BitFieldMostSignificantBit-0>False</BitFieldMostSignificantBit-0>
@@ -699,6 +733,14 @@ cl0rmf.lib
       <ItemAddTime>635499358467055131</ItemAddTime>
       <ItemAddTimeCount>0</ItemAddTimeCount>
     </Instance>
+    <Instance Guid="0a1444f6-d98c-4f01-ac55-aa98600c3ae7">
+      <ItemAddTime>635501114845188047</ItemAddTime>
+      <ItemAddTimeCount>0</ItemAddTimeCount>
+    </Instance>
+    <Instance Guid="e7473f74-3b1b-4069-8871-2108e97129ee">
+      <ItemAddTime>635501116038748194</ItemAddTime>
+      <ItemAddTimeCount>0</ItemAddTimeCount>
+    </Instance>
     <Instance Guid="2317529b-91c1-49b6-8351-6d8f51718b0d">
       <TimeTagModified-SourceItem0--0>-8587872966387720677</TimeTagModified-SourceItem0--0>
       <SourceItem0-IsLockedByUser>False</SourceItem0-IsLockedByUser>
@@ -737,6 +779,10 @@ cl0rmf.lib
       <SourceItem8-IsLockedByUser>False</SourceItem8-IsLockedByUser>
       <SourceItem8-BuildingTarget-0>True</SourceItem8-BuildingTarget-0>
       <SourceItem8-IndividualCompileOption-0>False</SourceItem8-IndividualCompileOption-0>
+      <TimeTagModified-SourceItem9--0>-8587871210009587761</TimeTagModified-SourceItem9--0>
+      <SourceItem9-IsLockedByUser>False</SourceItem9-IsLockedByUser>
+      <SourceItem9-BuildingTarget-0>True</SourceItem9-BuildingTarget-0>
+      <SourceItem9-IndividualCompileOption-0>False</SourceItem9-IndividualCompileOption-0>
     </Instance>
   </Class>
   <Class Guid="44fa27c9-0aa0-4297-bd3b-2c5c5bdb8881">
@@ -7465,7 +7511,7 @@ cl0rmf.lib
               &lt;/DataElement&gt;
             &lt;/SerializableData&gt;
             &lt;SerializableData name="IntervalValue"&gt;
-              &lt;DataElement key="Text" value="100"&gt;
+              &lt;DataElement key="Text" value="25"&gt;
               &lt;/DataElement&gt;
             &lt;/SerializableData&gt;
             &lt;SerializableData name="ValueScale"&gt;

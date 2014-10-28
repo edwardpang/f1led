@@ -23,7 +23,7 @@
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
 * Description  : This file implements device driver for TAU module.
-* Creation Date: 26/10/2014
+* Creation Date: 28/10/2014
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -58,7 +58,7 @@ extern volatile uint32_t g_tau0_ch0_width;
 void R_TAU0_Create(void)
 {
     TAU0EN = 1U;    /* supplies input clock */
-    TPS0 = _05_TAU_CKM0_FCLK_5 | _00_TAU_CKM1_FCLK_0;
+    TPS0 = _03_TAU_CKM0_FCLK_3 | _00_TAU_CKM1_FCLK_0;
     /* Stop all channels */
     TTH0 =_02_TAU_CH1_H8_STOP_TRG_ON;
     TT0 = _01_TAU_CH0_STOP_TRG_ON | _02_TAU_CH1_STOP_TRG_ON;

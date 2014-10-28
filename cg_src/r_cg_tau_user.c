@@ -23,7 +23,7 @@
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
 * Description  : This file implements device driver for TAU module.
-* Creation Date: 26/10/2014
+* Creation Date: 28/10/2014
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -49,8 +49,8 @@ Global variables and functions
 /* For TAU0_ch0 pulse measurement */
 volatile uint32_t g_tau0_ch0_width = 0U;
 /* Start user code for global. Do not edit comment generated here */
-extern boolean tickFlag;
-extern unsigned short u16Throttle;
+extern boolean bTickFlag;
+extern uint16_t u16Throttle;
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -84,7 +84,7 @@ __interrupt static void r_tau0_channel0_interrupt(void)
 __interrupt static void r_tau0_channel1_interrupt(void)
 {
     /* Start user code. Do not edit comment generated here */
-	tickFlag = true;
+	bTickFlag = true;
     /* End user code. Do not edit comment generated here */
 }
 

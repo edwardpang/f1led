@@ -23,7 +23,7 @@
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
 * Description  : This file implements main function.
-* Creation Date: 26/10/2014
+* Creation Date: 28/10/2014
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -40,6 +40,7 @@ Includes
 #include "r_cg_port.h"
 #include "r_cg_tau.h"
 /* Start user code for include. Do not edit comment generated here */
+#include "SwTimer.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -47,10 +48,7 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
-#define TIME_PERIOD_100MS			1
-#define TIME_PERIOD_1S				10
-#define TIME_PERIOD_CALIBRATION		(10 * TIME_PERIOD_1S)
-#define TIME_PERIOD_LED_BLINK		(5 * TIME_PERIOD_100MS)
+
 
 typedef enum {
 	APP_STATE_INIT = 0,
@@ -59,14 +57,14 @@ typedef enum {
 	APP_STATE_POST_CALIBRATION,
 	APP_STATE_MODE_1,
 	APP_STATE_MODE_2,
+	APP_STATE_HALT,
 	APP_STATE_NUM
 } eAppState;
-
 eAppState state;
 
 boolean ledOnOff;
-boolean tickFlag;
-short tickCnt;
+boolean bTickFlag;
+boolean bPolarity;
 
 /*
 Test with blue colour Throttle Generator.
@@ -76,22 +74,13 @@ When display shows 800, throttle variable = 16xxx
  */
 #define THROTTLE_READING_MIN	16000
 #define THROTTLE_READING_MAX	45000
+#define THROTTLE_READING_TOLERANCE	800
 
-unsigned short u16Throttle;
-unsigned short u16ThrottleMiddle;
-unsigned short u16ThrottleUpperBound;
-unsigned short u16ThrottleLowerBound;
-
-void tickCntUpdate (void) {
-	if (tickFlag) {
-		tickCnt ++;
-		tickFlag = 0;
-	}
-}
-
-void tickCntClear (void) {
-	tickCnt = 0;
-}
+uint16_t u16Throttle;
+uint16_t u16ThrottleMiddle;
+uint16_t u16ThrottleUpperBound;
+uint16_t u16ThrottleLowerBound;
+uint32_t u32ThrottleCalculation;
 
 void LedOn ( ) {
 	P0 = _00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0;
@@ -129,52 +118,82 @@ void main(void)
     R_MAIN_UserInit();
     /* Start user code. Do not edit comment generated here */
     while (1U) {
-		tickCntUpdate ( );
+		swTimerUpdate ( );
 		switch (state) {
 			case APP_STATE_INIT:
 				// Init Global Variable
-				tickFlag = false;
-				tickCntClear ( );
+				bTickFlag = false;
+				bPolarity = true;
+				swTimerClearAll ( );
 				u16Throttle = 0;
 				
 				// Init LED
 				LedInit ( );
-				LedOn ( );
 
 				// Start Timer
+				swTimerSet (SW_TIMER_STATE_DURATION, TIME_PERIOD_PRE_CALIBRATION);
+				swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_LED_CALIBRATION_PATTERN);
 				R_TAU0_Channel0_Start ( );
 				R_TAU0_Channel1_Start ( );
 				state = APP_STATE_PRE_CALIBRATION;
 				break;
 
 			case APP_STATE_PRE_CALIBRATION:
-				// Make Sure Throttle is connected
-				if (u16Throttle > THROTTLE_READING_MIN) {
-					state = APP_STATE_CALIBRATION;
-					LedOff ( );
-					tickCntClear ( );
+				if (swTimerIsTimeout (SW_TIMER_STATE_DURATION)) {
+					// Make Sure Throttle is connected
+					if (u16Throttle > THROTTLE_READING_MIN) {
+						LedOff ( );
+						u32ThrottleCalculation = u16Throttle;
+					}
+					swTimerSet (SW_TIMER_STATE_DURATION, TIME_PERIOD_CALIBRATION);
+					state = APP_STATE_CALIBRATION;					
+				}
+				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
+					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_LED_CALIBRATION_PATTERN);
+					LedToggle ( );				
 				}
 				break;
 				
 			case APP_STATE_CALIBRATION:
-				if (tickCnt == TIME_PERIOD_CALIBRATION) {
-					tickCntClear ( );
+				u32ThrottleCalculation += u16Throttle;
+				u32ThrottleCalculation >>= 1;
+				if (swTimerIsTimeout (SW_TIMER_STATE_DURATION)) {
 					state = APP_STATE_POST_CALIBRATION;
 				}
 				break;
 				
 			case APP_STATE_POST_CALIBRATION:
-				state = APP_STATE_MODE_1;
+				u16ThrottleMiddle = (uint16_t) (u32ThrottleCalculation & 0x0000FFFF);
+				u16ThrottleUpperBound = u16ThrottleMiddle + THROTTLE_READING_TOLERANCE;
+				u16ThrottleUpperBound = u16ThrottleMiddle - THROTTLE_READING_TOLERANCE;
+				if (u16ThrottleMiddle > THROTTLE_READING_MAX || u16ThrottleMiddle < THROTTLE_READING_MIN) {
+					//swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_HALT_PATTERN);
+					LedOn ( );
+					state = APP_STATE_HALT;
+				}
+				else {
+					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
+					state = APP_STATE_MODE_1;
+				}
 				break;
 				
 			case APP_STATE_MODE_1:
-				if (tickCnt == TIME_PERIOD_LED_BLINK) {
-					tickCntClear ( );
+				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
+					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
 					LedToggle ( );
 				}
 				break;
 				
 			case APP_STATE_MODE_2:
+				break;
+				
+			case APP_STATE_HALT:
+				/*
+				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
+					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_HALT_PATTERN);
+					LedToggle ( );
+				}
+				*/
 				break;
 		}
     }
