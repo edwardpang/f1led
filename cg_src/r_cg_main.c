@@ -72,14 +72,19 @@ When display shows 2200, throttle variable = 44xxx
 When display shows 1500, throttle variable = 30xxx
 When display shows 800, throttle variable = 16xxx
  */
-#define THROTTLE_READING_MIN	16000
-#define THROTTLE_READING_MAX	45000
+#define THROTTLE_READING_MIN	20000
+#define THROTTLE_READING_MAX	40000
 #define THROTTLE_READING_TOLERANCE	800
+#define THROTTLE_READING_CYCLE_STEP1	2000
+#define THROTTLE_READING_CYCLE_STEP2	4000
+#define THROTTLE_READING_CYCLE_STEP3	6000
+#define THROTTLE_READING_CYCLE_STEP4	8000
+#define THROTTLE_READING_CYCLE_STEP5	10000
 
 uint16_t u16Throttle;
 uint16_t u16ThrottleMiddle;
-uint16_t u16ThrottleUpperBound;
-uint16_t u16ThrottleLowerBound;
+uint16_t u16ThrottleMiddleUpperBound;
+uint16_t u16ThrottleMiddleLowerBound;
 uint32_t u32ThrottleCalculation;
 
 void LedOn ( ) {
@@ -123,6 +128,8 @@ void main(void)
 			case APP_STATE_INIT:
 				// Init Global Variable
 				bTickFlag = false;
+				// The boolean bPolarity should be read from P137 later
+				// TRUE means input logic high, normal polarity
 				bPolarity = true;
 				swTimerClearAll ( );
 				u16Throttle = 0;
@@ -160,12 +167,16 @@ void main(void)
 				if (swTimerIsTimeout (SW_TIMER_STATE_DURATION)) {
 					state = APP_STATE_POST_CALIBRATION;
 				}
+				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
+					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_LED_CALIBRATION_PATTERN);
+					LedToggle ( );				
+				}
 				break;
 				
 			case APP_STATE_POST_CALIBRATION:
 				u16ThrottleMiddle = (uint16_t) (u32ThrottleCalculation & 0x0000FFFF);
-				u16ThrottleUpperBound = u16ThrottleMiddle + THROTTLE_READING_TOLERANCE;
-				u16ThrottleUpperBound = u16ThrottleMiddle - THROTTLE_READING_TOLERANCE;
+				u16ThrottleMiddleUpperBound = u16ThrottleMiddle + THROTTLE_READING_TOLERANCE;
+				u16ThrottleMiddleLowerBound = u16ThrottleMiddle - THROTTLE_READING_TOLERANCE;
 				if (u16ThrottleMiddle > THROTTLE_READING_MAX || u16ThrottleMiddle < THROTTLE_READING_MIN) {
 					//swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_HALT_PATTERN);
 					LedOn ( );
@@ -179,7 +190,30 @@ void main(void)
 				
 			case APP_STATE_MODE_1:
 				if (swTimerIsTimeout (SW_TIMER_LED_BLINK)) {
-					swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
+					if (bPolarity) {
+						if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP5))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_5);
+						else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP4))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_4);
+						else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP3))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_3);
+						else if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP2))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_2);
+						else //if (u16Throttle < (u16ThrottleMiddle - THROTTLE_READING_CYCLE_STEP1))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
+					}
+/*					else {
+						if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP1))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_1);
+						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP2))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_2);
+						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP3))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_3);
+						else if (u16Throttle > (u16ThrottleMiddle + THROTTLE_READING_CYCLE_STEP4))
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_4);
+						else
+							swTimerSet (SW_TIMER_LED_BLINK, TIME_PERIOD_SPEED_PATTERN_5);
+					}*/
 					LedToggle ( );
 				}
 				break;

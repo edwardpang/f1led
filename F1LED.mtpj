@@ -28,6 +28,7 @@
       <RelativePath>cg_src\r_cg_lk.dr</RelativePath>
       <TreeImageGuid>a4460d02-6943-4122-9169-dd699e916213</TreeImageGuid>
       <ParentItem>5201c51f-1828-4945-b060-204bd47a16cd</ParentItem>
+      <Property>83909d07-32bd-49d2-9308-e124d8d000bf</Property>
     </Instance>
     <Instance Guid="e7473f74-3b1b-4069-8871-2108e97129ee">
       <Name>SwTimer.h</Name>
@@ -183,6 +184,9 @@
       <MemoCount>0</MemoCount>
     </Instance>
     <Instance Guid="046f2a76-19a7-4302-ab49-f4660a951a12">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="83909d07-32bd-49d2-9308-e124d8d000bf">
       <MemoCount>0</MemoCount>
     </Instance>
   </Class>
