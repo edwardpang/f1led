@@ -23,7 +23,7 @@
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
 * Description  : This file implements main function.
-* Creation Date: 28/10/2014
+* Creation Date: 17/11/2014
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -38,6 +38,7 @@ Includes
 #include "r_cg_macrodriver.h"
 #include "r_cg_cgc.h"
 #include "r_cg_port.h"
+#include "r_cg_key.h"
 #include "r_cg_tau.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
@@ -64,15 +65,14 @@ Global variables and functions
 
 #define TIME_PERIOD_HALT_PATTERN		(1 * TIME_PERIOD_100MS)
 
-#define TIME_PERIOD_LED_CALIBRATION_PATTERN		(2 * TIME_PERIOD_TICK)
+#define TIME_PERIOD_LED_CALIBRATION_PATTERN		(2 * TIME_PERIOD_100MS)
 #define TIME_PERIOD_LED_TEST_PATTERN	(5 * TIME_PERIOD_100MS)
 
 uint16_t u16SwTimerCnt_LedBlink;
 uint16_t u16SwTimerCnt_Duration;
 
 typedef enum {
-	APP_STATE_INIT = 0,
-	APP_STATE_PRE_CALIBRATION,
+	APP_STATE_PRE_CALIBRATION = 0,
 	APP_STATE_CALIBRATION,
 	APP_STATE_POST_CALIBRATION,
 	APP_STATE_MODE_1,
@@ -84,7 +84,7 @@ eAppState state;
 
 boolean bTickFlag;
 boolean bPolarity;
-boolean bMode2Cycle1;
+boolean bModeToggleFlag;
 
 /*
 Test with blue colour Throttle Generator.
@@ -104,6 +104,7 @@ When display shows 800, throttle variable = 16xxx
 uint16_t u16Throttle;
 uint16_t u16ThrottleMiddle;
 
+#define POLARITY_PIN	P4.0
 #define LED_ON		(_00_Pn0_OUTPUT_0 | _00_Pn1_OUTPUT_0 | _00_Pn2_OUTPUT_0 | _00_Pn3_OUTPUT_0 | _00_Pn4_OUTPUT_0)
 #define LED_OFF		(_01_Pn0_OUTPUT_1 | _02_Pn1_OUTPUT_1 | _04_Pn2_OUTPUT_1 | _08_Pn3_OUTPUT_1 | _10_Pn4_OUTPUT_1)
 #define LED_PORT	(P0)
@@ -174,7 +175,6 @@ void main(void)
 			case APP_STATE_POST_CALIBRATION:
 				u16ThrottleMiddle = u16Throttle;
 				if (u16ThrottleMiddle > THROTTLE_READING_MAX || u16ThrottleMiddle < THROTTLE_READING_MIN) {
-					LED_PORT = LED_ON;
 					state = APP_STATE_HALT;
 				}
 				else {
@@ -211,6 +211,10 @@ void main(void)
 					}
 					LedToggle ( );
 				}
+				if (bModeToggleFlag) {
+					bModeToggleFlag = false;
+					state = APP_STATE_MODE_2;
+				}	
 				break;
 				
 			case APP_STATE_MODE_2:
@@ -250,9 +254,15 @@ void main(void)
 						LedToggle ( );
 					}
 				}
+				if (bModeToggleFlag) {
+					bModeToggleFlag = false;
+					u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
+					state = APP_STATE_MODE_1;
+				}	
 				break;
 				
 			case APP_STATE_HALT:
+				LED_PORT = LED_ON;
 				break;
 		}
     }
@@ -273,11 +283,14 @@ void R_MAIN_UserInit(void)
 	bTickFlag = false;
 	// The boolean bPolarity should be read from P137 later
 	// TRUE means input logic high, normal polarity
-	bPolarity = true;
+	//bPolarity = true;
+	bPolarity = POLARITY_PIN;
+	bModeToggleFlag = false;
 	u16SwTimerCnt_LedBlink = 0;			
 	u16SwTimerCnt_Duration = 0;
 	u16Throttle = 0;
-
+	R_KEY_Start ( );
+	
 	// Init LED
 	LED_PORT = LED_OFF;
 

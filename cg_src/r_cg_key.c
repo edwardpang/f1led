@@ -18,11 +18,11 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : r_cg_systeminit.c
+* File Name    : r_cg_key.c
 * Version      : Code Generator for RL78/R7F0C8021 V1.03.00.03 [07 Aug 2014]
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
-* Description  : This file implements system initializing function.
+* Description  : This file implements device driver for KEY module.
 * Creation Date: 17/11/2014
 ***********************************************************************************************************************/
 
@@ -36,10 +36,7 @@ Pragma directive
 Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
-#include "r_cg_cgc.h"
-#include "r_cg_port.h"
 #include "r_cg_key.h"
-#include "r_cg_tau.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
@@ -51,31 +48,54 @@ Global variables and functions
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-* Function Name: R_Systeminit
-* Description  : This function initializes every macro.
+* Function Name: R_KEY_Create
+* Description  : This function initializes the key return module.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_Systeminit(void)
+void R_KEY_Create(void)
 {
-    PIOR = 0x02U;
-    R_CGC_Get_ResetSource();
-    R_PORT_Create();
-    R_CGC_Create();
-    R_KEY_Create();
-    R_TAU0_Create();
-}
+    volatile uint8_t w_count;
+    
+    KRMK = 1U;  /* disable INTKR operation */
+    KRIF = 0U;  /* clear INTKR interrupt flag */
+    KRCTL = _00_KR_EDGE_FALLING;
+    /* Set INTKR low priority */
+    KRPR1 = 1U;
+    KRPR0 = 1U;
+    KRCTL |= _80_KR_FLAG_USED;
+    KRM0 = _00_KR0_SIGNAL_DETECT_OFF | _02_KR1_SIGNAL_DETECT_ON | _00_KR2_SIGNAL_DETECT_OFF | 
+           _00_KR3_SIGNAL_DETECT_OFF | _00_KR4_SIGNAL_DETECT_OFF | _00_KR5_SIGNAL_DETECT_OFF;
 
+    /* Change the waiting time according to the system  */
+    for (w_count = 0U; w_count <= KEY_WAITTIME; w_count++)
+    {   
+        NOP();
+    }
+}
 /***********************************************************************************************************************
-* Function Name: hdwinit
-* Description  : This function initializes hardware setting.
+* Function Name: R_KEY_Start
+* Description  : This function clears INTKR interrupt flag and enables interrupt.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void hdwinit(void)
+void R_KEY_Start(void)
 {
-    DI();
-    R_Systeminit();
+    KRF = 0U;
+    KRIF = 0U;  /* clear INTKR interrupt flag */
+    KRMK = 0U;  /* enable INTKR operation */
+}
+/***********************************************************************************************************************
+* Function Name: R_KEY_Stop
+* Description  : This function disables INTKR interrupt and clears interrupt flag.
+* Arguments    : None
+* Return Value : None
+***********************************************************************************************************************/
+void R_KEY_Stop(void)
+{
+    KRMK = 1U;  /* disable INTKR operation */
+    KRIF = 0U;  /* clear INTKR interrupt flag */
+    KRF = 0U;
 }
 
 /* Start user code for adding. Do not edit comment generated here */

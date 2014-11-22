@@ -18,65 +18,67 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : r_cg_systeminit.c
+* File Name    : r_cg_key.h
 * Version      : Code Generator for RL78/R7F0C8021 V1.03.00.03 [07 Aug 2014]
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
-* Description  : This file implements system initializing function.
+* Description  : This file implements device driver for KEY module.
 * Creation Date: 17/11/2014
 ***********************************************************************************************************************/
+#ifndef KEY_H
+#define KEY_H
 
 /***********************************************************************************************************************
-Pragma directive
+Macro definitions (Register bit)
 ***********************************************************************************************************************/
-/* Start user code for pragma. Do not edit comment generated here */
+/*
+    Key Interrupt Control Register (KRCTL)
+*/
+/* Key interrupt flag control (KRMD) */
+#define _00_KR_FLAG_UNUSED              (0x00U)   /* unuse key interrupt flag */
+#define _80_KR_FLAG_USED                (0x80U)   /* use key interrupt flag */
+/* Key interrupt edge detection control (KREG) */
+#define _00_KR_EDGE_FALLING             (0x00U)   /* falling edge */
+#define _01_KR_EDGE_RISING              (0x01U)   /* rising edge */
+
+/*
+    Key Return Mode Register (KRM)
+*/
+/* Key interrupt mode control (KRM0) */
+#define _00_KR0_SIGNAL_DETECT_OFF       (0x00U) /* not detect KR0 signal */
+#define _01_KR0_SIGNAL_DETECT_ON        (0x01U) /* detect KR0 signal */
+/* Key interrupt mode control (KRM1) */
+#define _00_KR1_SIGNAL_DETECT_OFF       (0x00U) /* not detect KR1 signal */
+#define _02_KR1_SIGNAL_DETECT_ON        (0x02U) /* detect KR1 signal */
+/* Key interrupt mode control (KRM2) */
+#define _00_KR2_SIGNAL_DETECT_OFF       (0x00U) /* not detect KR2 signal */
+#define _04_KR2_SIGNAL_DETECT_ON        (0x04U) /* detect KR2 signal */
+/* Key interrupt mode control (KRM3) */
+#define _00_KR3_SIGNAL_DETECT_OFF       (0x00U) /* not detect KR3 signal */
+#define _08_KR3_SIGNAL_DETECT_ON        (0x08U) /* detect KR3 signal */
+/* Key interrupt mode control (KRM4) */
+#define _00_KR4_SIGNAL_DETECT_OFF       (0x00U) /* not detect KR4 signal */
+#define _10_KR4_SIGNAL_DETECT_ON        (0x10U) /* detect KR4 signal */
+/* Key interrupt mode control (KRM5) */
+#define _00_KR5_SIGNAL_DETECT_OFF       (0x00U) /* not detect KR5 signal */
+#define _20_KR5_SIGNAL_DETECT_ON        (0x20U) /* detect KR5 signal */
+
+/***********************************************************************************************************************
+Macro definitions
+***********************************************************************************************************************/
+#define KEY_WAITTIME                    (1U)   /* change the waiting time according to the system */ 
+
+/***********************************************************************************************************************
+Typedef definitions
+***********************************************************************************************************************/
+
+/***********************************************************************************************************************
+Global functions
+***********************************************************************************************************************/
+void R_KEY_Create(void);
+void R_KEY_Start(void);
+void R_KEY_Stop(void);
+
+/* Start user code for function. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
-
-/***********************************************************************************************************************
-Includes
-***********************************************************************************************************************/
-#include "r_cg_macrodriver.h"
-#include "r_cg_cgc.h"
-#include "r_cg_port.h"
-#include "r_cg_key.h"
-#include "r_cg_tau.h"
-/* Start user code for include. Do not edit comment generated here */
-/* End user code. Do not edit comment generated here */
-#include "r_cg_userdefine.h"
-
-/***********************************************************************************************************************
-Global variables and functions
-***********************************************************************************************************************/
-/* Start user code for global. Do not edit comment generated here */
-/* End user code. Do not edit comment generated here */
-
-/***********************************************************************************************************************
-* Function Name: R_Systeminit
-* Description  : This function initializes every macro.
-* Arguments    : None
-* Return Value : None
-***********************************************************************************************************************/
-void R_Systeminit(void)
-{
-    PIOR = 0x02U;
-    R_CGC_Get_ResetSource();
-    R_PORT_Create();
-    R_CGC_Create();
-    R_KEY_Create();
-    R_TAU0_Create();
-}
-
-/***********************************************************************************************************************
-* Function Name: hdwinit
-* Description  : This function initializes hardware setting.
-* Arguments    : None
-* Return Value : None
-***********************************************************************************************************************/
-void hdwinit(void)
-{
-    DI();
-    R_Systeminit();
-}
-
-/* Start user code for adding. Do not edit comment generated here */
-/* End user code. Do not edit comment generated here */
+#endif

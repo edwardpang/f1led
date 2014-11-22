@@ -18,17 +18,18 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : r_cg_systeminit.c
+* File Name    : r_cg_key_user.c
 * Version      : Code Generator for RL78/R7F0C8021 V1.03.00.03 [07 Aug 2014]
 * Device(s)    : R7F0C8021
 * Tool-Chain   : CA78K0R
-* Description  : This file implements system initializing function.
+* Description  : This file implements device driver for KEY module.
 * Creation Date: 17/11/2014
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
 Pragma directive
 ***********************************************************************************************************************/
+#pragma interrupt INTKR r_key_interrupt
 /* Start user code for pragma. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 
@@ -36,10 +37,7 @@ Pragma directive
 Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
-#include "r_cg_cgc.h"
-#include "r_cg_port.h"
 #include "r_cg_key.h"
-#include "r_cg_tau.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
@@ -48,35 +46,24 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
+extern boolean bModeToggleFlag;
 /* End user code. Do not edit comment generated here */
 
-/***********************************************************************************************************************
-* Function Name: R_Systeminit
-* Description  : This function initializes every macro.
-* Arguments    : None
-* Return Value : None
-***********************************************************************************************************************/
-void R_Systeminit(void)
-{
-    PIOR = 0x02U;
-    R_CGC_Get_ResetSource();
-    R_PORT_Create();
-    R_CGC_Create();
-    R_KEY_Create();
-    R_TAU0_Create();
-}
+
 
 /***********************************************************************************************************************
-* Function Name: hdwinit
-* Description  : This function initializes hardware setting.
+* Function Name: r_key_interrupt
+* Description  : None
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void hdwinit(void)
+__interrupt static void r_key_interrupt(void)
 {
-    DI();
-    R_Systeminit();
+    /* Start user code. Do not edit comment generated here */
+	bModeToggleFlag = true;
+    /* End user code. Do not edit comment generated here */
 }
+
 
 /* Start user code for adding. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */

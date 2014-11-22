@@ -15,6 +15,7 @@
       <Type>Category</Type>
       <TreeImageGuid>ca577376-6f97-4ef1-9fe7-b03e86e75233</TreeImageGuid>
       <ParentItem>5201c51f-1828-4945-b060-204bd47a16cd</ParentItem>
+      <Property>ec4216f5-4f38-4dd1-bc63-e30a0a82de0c</Property>
     </Instance>
     <Instance Guid="00cfdea5-e06b-43ef-8dd4-b6007272f06b">
       <Name>Code Generator</Name>
@@ -121,6 +122,7 @@
       <RelativePath>cg_src\r_cg_port.h</RelativePath>
       <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
       <ParentItem>00cfdea5-e06b-43ef-8dd4-b6007272f06b</ParentItem>
+      <Property>a7466160-e667-42f5-8ca9-9f7116da8b92</Property>
     </Instance>
     <Instance Guid="ea5f124e-de1f-43d6-bce1-8de3d71e8a12">
       <Name>r_cg_tau.h</Name>
@@ -129,6 +131,29 @@
       <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
       <ParentItem>00cfdea5-e06b-43ef-8dd4-b6007272f06b</ParentItem>
       <Property>4477ca03-6ed2-40f9-8257-4fbaac11abc4</Property>
+    </Instance>
+    <Instance Guid="44531840-573d-4825-a9b3-8de6337d7c63">
+      <Name>r_cg_key.c</Name>
+      <Type>File</Type>
+      <RelativePath>cg_src\r_cg_key.c</RelativePath>
+      <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
+      <ParentItem>00cfdea5-e06b-43ef-8dd4-b6007272f06b</ParentItem>
+      <Property>7026c964-c956-4243-861b-e56db30e4e93</Property>
+    </Instance>
+    <Instance Guid="6fe7964b-24f8-4446-b8d9-a91ca669f457">
+      <Name>r_cg_key_user.c</Name>
+      <Type>File</Type>
+      <RelativePath>cg_src\r_cg_key_user.c</RelativePath>
+      <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
+      <ParentItem>00cfdea5-e06b-43ef-8dd4-b6007272f06b</ParentItem>
+      <Property>0c65da8e-3ad2-4fe8-8ca7-e111d8f37940</Property>
+    </Instance>
+    <Instance Guid="e772c209-9444-4068-8c38-4a99cda18e33">
+      <Name>r_cg_key.h</Name>
+      <Type>File</Type>
+      <RelativePath>cg_src\r_cg_key.h</RelativePath>
+      <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
+      <ParentItem>00cfdea5-e06b-43ef-8dd4-b6007272f06b</ParentItem>
     </Instance>
   </Class>
   <Class Guid="fb98844b-2c27-4275-9804-f6e63e204da0">
@@ -164,11 +189,23 @@
     <Instance Guid="a899d328-5c7b-4652-968c-7a3b286b56ff">
       <MemoCount>0</MemoCount>
     </Instance>
+    <Instance Guid="a7466160-e667-42f5-8ca9-9f7116da8b92">
+      <MemoCount>0</MemoCount>
+    </Instance>
     <Instance Guid="4477ca03-6ed2-40f9-8257-4fbaac11abc4">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="7026c964-c956-4243-861b-e56db30e4e93">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="0c65da8e-3ad2-4fe8-8ca7-e111d8f37940">
       <MemoCount>0</MemoCount>
     </Instance>
   </Class>
   <Class Guid="78a5c5cd-76cb-4bcc-a031-3020011fbc9a">
+    <Instance Guid="ec4216f5-4f38-4dd1-bc63-e30a0a82de0c">
+      <MemoCount>0</MemoCount>
+    </Instance>
     <Instance Guid="1fd6368e-accb-4e3b-a70e-80858910fde0">
       <MemoCount>0</MemoCount>
     </Instance>
@@ -228,7 +265,11 @@
       <SourceItemType7>CSource</SourceItemType7>
       <SourceItemGuid8>f80c0702-92cf-477e-858f-5fef0baa1e29</SourceItemGuid8>
       <SourceItemType8>CSource</SourceItemType8>
-      <SourceItemCount>9</SourceItemCount>
+      <SourceItemGuid9>44531840-573d-4825-a9b3-8de6337d7c63</SourceItemGuid9>
+      <SourceItemType9>CSource</SourceItemType9>
+      <SourceItemGuid10>6fe7964b-24f8-4446-b8d9-a91ca669f457</SourceItemGuid10>
+      <SourceItemType10>CSource</SourceItemType10>
+      <SourceItemCount>11</SourceItemCount>
       <VfiSourceItemCount>0</VfiSourceItemCount>
       <LastDeviceChangedCounter>0</LastDeviceChangedCounter>
     </Instance>
@@ -253,10 +294,12 @@
       <IntermediateOutputFolder-DefaultValue>%BuildModeName%</IntermediateOutputFolder-DefaultValue>
       <OutputFolderNameForHex-DefaultValue>%BuildModeName%</OutputFolderNameForHex-DefaultValue>
       <RomizeFileOutputFolder-DefaultValue>%BuildModeName%</RomizeFileOutputFolder-DefaultValue>
+      <SystemIncludePathsForAssemble-DefaultValue />
       <MacroDefinitionForAssembler-DefaultValue />
       <OutputFileNameForHex-DefaultValue>%ProjectName%.hex</OutputFileNameForHex-DefaultValue>
       <OutputFolderNameForLinker-DefaultValue>%BuildModeName%</OutputFolderNameForLinker-DefaultValue>
       <RomizeFileName-DefaultValue>romp.lmf</RomizeFileName-DefaultValue>
+      <SystemIncludePaths-DefaultValue />
       <TemporaryFolder-DefaultValue />
       <HexadecimalFileFormat-DefaultValue>IntelExtended</HexadecimalFileFormat-DefaultValue>
       <MacroDefinitionForCompiler-DefaultValue />
@@ -504,7 +547,7 @@ cg_src
       <ReserveWorkingMemoryForRrmDmm-DefaultValue>False</ReserveWorkingMemoryForRrmDmm-DefaultValue>
       <StartAddressOfWorkingMemoryForRrmDmm-DefaultValue />
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8587870969455316503</TimeTagModified--0>
+      <TimeTagModified--0>-8587853805754106774</TimeTagModified--0>
       <DebugInformation-0>True</DebugInformation-0>
       <ErrorListFile-0>False</ErrorListFile-0>
       <LibraryFiles-0 />
@@ -530,7 +573,7 @@ cg_src
       <OnChipDebugOptionBytesValue-0>05</OnChipDebugOptionBytesValue-0>
       <StartAddressOfOnChipDebugOptionBytes-0>600</StartAddressOfOnChipDebugOptionBytes-0>
       <SizeOfOnChipDebugOptionBytesArea-0>512</SizeOfOnChipDebugOptionBytesArea-0>
-      <UserOptionBytes-0>True</UserOptionBytes-0>
+      <UserOptionBytes-0>False</UserOptionBytes-0>
       <UserOptionBytesValue-0>EFE3F9</UserOptionBytesValue-0>
       <MirrorSourceArea-0>Maa0</MirrorSourceArea-0>
       <NumberOfLinesPerPage-0>0</NumberOfLinesPerPage-0>
@@ -647,7 +690,7 @@ cg_src
       <VariableInformationFolder-DefaultValue>%BuildModeName%</VariableInformationFolder-DefaultValue>
       <VariableInformationFileName-DefaultValue>%ProjectName%.vfi</VariableInformationFileName-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8587870969455316503</TimeTagModified--0>
+      <TimeTagModified--0>-8587853805754106774</TimeTagModified--0>
       <Margin-0>0</Margin-0>
       <OutputRomRamUsage-0>False</OutputRomRamUsage-0>
       <VariableInformationFile-0>False</VariableInformationFile-0>
@@ -710,6 +753,18 @@ cg_src
       <ItemAddTime>635499358467055131</ItemAddTime>
       <ItemAddTimeCount>0</ItemAddTimeCount>
     </Instance>
+    <Instance Guid="44531840-573d-4825-a9b3-8de6337d7c63">
+      <ItemAddTime>635502968656045469</ItemAddTime>
+      <ItemAddTimeCount>0</ItemAddTimeCount>
+    </Instance>
+    <Instance Guid="6fe7964b-24f8-4446-b8d9-a91ca669f457">
+      <ItemAddTime>635502968656045469</ItemAddTime>
+      <ItemAddTimeCount>1</ItemAddTimeCount>
+    </Instance>
+    <Instance Guid="e772c209-9444-4068-8c38-4a99cda18e33">
+      <ItemAddTime>635502968656045469</ItemAddTime>
+      <ItemAddTimeCount>2</ItemAddTimeCount>
+    </Instance>
     <Instance Guid="2317529b-91c1-49b6-8351-6d8f51718b0d">
       <TimeTagModified-SourceItem0--0>-8587872966387720677</TimeTagModified-SourceItem0--0>
       <SourceItem0-IsLockedByUser>False</SourceItem0-IsLockedByUser>
@@ -748,6 +803,14 @@ cg_src
       <SourceItem8-IsLockedByUser>False</SourceItem8-IsLockedByUser>
       <SourceItem8-BuildingTarget-0>True</SourceItem8-BuildingTarget-0>
       <SourceItem8-IndividualCompileOption-0>False</SourceItem8-IndividualCompileOption-0>
+      <TimeTagModified-SourceItem9--0>-8587869356198730339</TimeTagModified-SourceItem9--0>
+      <SourceItem9-IsLockedByUser>False</SourceItem9-IsLockedByUser>
+      <SourceItem9-BuildingTarget-0>True</SourceItem9-BuildingTarget-0>
+      <SourceItem9-IndividualCompileOption-0>False</SourceItem9-IndividualCompileOption-0>
+      <TimeTagModified-SourceItem10--0>-8587869356198730339</TimeTagModified-SourceItem10--0>
+      <SourceItem10-IsLockedByUser>False</SourceItem10-IsLockedByUser>
+      <SourceItem10-BuildingTarget-0>True</SourceItem10-BuildingTarget-0>
+      <SourceItem10-IndividualCompileOption-0>False</SourceItem10-IndividualCompileOption-0>
     </Instance>
   </Class>
   <Class Guid="44fa27c9-0aa0-4297-bd3b-2c5c5bdb8881">
@@ -1175,7 +1238,7 @@ cg_src
         &lt;/DataElement&gt;
       &lt;/SerializableData&gt;
       &lt;SerializableData name="Interrput_10"&gt;
-        &lt;DataElement key="InusedAs" value=""&gt;
+        &lt;DataElement key="InusedAs" value="INTKR"&gt;
         &lt;/DataElement&gt;
       &lt;/SerializableData&gt;
     &lt;/SerializableData&gt;
@@ -1227,7 +1290,7 @@ cg_src
         &lt;/DataElement&gt;
       &lt;/SerializableData&gt;
       &lt;SerializableData name="PinNumber_2"&gt;
-        &lt;DataElement key="InusedAs" value="Port12##P125"&gt;
+        &lt;DataElement key="InusedAs" value="KEY##KR1"&gt;
         &lt;/DataElement&gt;
       &lt;/SerializableData&gt;
       &lt;SerializableData name="PinNumber_3"&gt;
@@ -1773,7 +1836,7 @@ cg_src
         &lt;/DataElement&gt;
         &lt;DataElement key="error" value="NoError"&gt;
         &lt;/DataElement&gt;
-        &lt;DataElement key="inuse" value="Unused"&gt;
+        &lt;DataElement key="inuse" value="Used"&gt;
         &lt;/DataElement&gt;
       &lt;/SerializableData&gt;
       &lt;SerializableData name="WDT"&gt;
@@ -2133,21 +2196,21 @@ cg_src
       &lt;SerializableData name="KEY"&gt;
         &lt;DataElement key="visible" value="True"&gt;
         &lt;/DataElement&gt;
-        &lt;DataElement key="inuse" value="Unused"&gt;
+        &lt;DataElement key="inuse" value="Locked"&gt;
         &lt;/DataElement&gt;
         &lt;SerializableData name="r_cg_key_c"&gt;
           &lt;DataElement key="visible" value="True"&gt;
           &lt;/DataElement&gt;
           &lt;DataElement key="text" value="r_cg_key.c"&gt;
           &lt;/DataElement&gt;
-          &lt;DataElement key="inuse" value="Unused"&gt;
+          &lt;DataElement key="inuse" value="Locked"&gt;
           &lt;/DataElement&gt;
           &lt;SerializableData name="R_KEY_Create"&gt;
             &lt;DataElement key="visible" value="True"&gt;
             &lt;/DataElement&gt;
             &lt;DataElement key="text" value="R_KEY_Create"&gt;
             &lt;/DataElement&gt;
-            &lt;DataElement key="inuse" value="Unused"&gt;
+            &lt;DataElement key="inuse" value="Locked"&gt;
             &lt;/DataElement&gt;
           &lt;/SerializableData&gt;
           &lt;SerializableData name="R_KEY_Start"&gt;
@@ -2155,7 +2218,7 @@ cg_src
             &lt;/DataElement&gt;
             &lt;DataElement key="text" value="R_KEY_Start"&gt;
             &lt;/DataElement&gt;
-            &lt;DataElement key="inuse" value="Unused"&gt;
+            &lt;DataElement key="inuse" value="Locked"&gt;
             &lt;/DataElement&gt;
           &lt;/SerializableData&gt;
           &lt;SerializableData name="R_KEY_Stop"&gt;
@@ -2163,7 +2226,7 @@ cg_src
             &lt;/DataElement&gt;
             &lt;DataElement key="text" value="R_KEY_Stop"&gt;
             &lt;/DataElement&gt;
-            &lt;DataElement key="inuse" value="Unused"&gt;
+            &lt;DataElement key="inuse" value="Locked"&gt;
             &lt;/DataElement&gt;
           &lt;/SerializableData&gt;
         &lt;/SerializableData&gt;
@@ -2172,7 +2235,7 @@ cg_src
           &lt;/DataElement&gt;
           &lt;DataElement key="text" value="r_cg_key_user.c"&gt;
           &lt;/DataElement&gt;
-          &lt;DataElement key="inuse" value="Unused"&gt;
+          &lt;DataElement key="inuse" value="Locked"&gt;
           &lt;/DataElement&gt;
           &lt;SerializableData name="R_KEY_Create_UserInit"&gt;
             &lt;DataElement key="visible" value="True"&gt;
@@ -2187,7 +2250,7 @@ cg_src
             &lt;/DataElement&gt;
             &lt;DataElement key="text" value="r_key_interrupt"&gt;
             &lt;/DataElement&gt;
-            &lt;DataElement key="inuse" value="Unused"&gt;
+            &lt;DataElement key="inuse" value="Locked"&gt;
             &lt;/DataElement&gt;
           &lt;/SerializableData&gt;
         &lt;/SerializableData&gt;
@@ -2196,7 +2259,7 @@ cg_src
           &lt;/DataElement&gt;
           &lt;DataElement key="text" value="r_cg_key.h"&gt;
           &lt;/DataElement&gt;
-          &lt;DataElement key="inuse" value="Unused"&gt;
+          &lt;DataElement key="inuse" value="Locked"&gt;
           &lt;/DataElement&gt;
         &lt;/SerializableData&gt;
       &lt;/SerializableData&gt;
@@ -3537,11 +3600,11 @@ cg_src
       &lt;SerializableData name="Port12"&gt;
         &lt;SerializableData name="P125"&gt;
           &lt;SerializableData name="MODULE_UNUSED"&gt;
-            &lt;DataElement key="Checked" value="False"&gt;
+            &lt;DataElement key="Checked" value="True"&gt;
             &lt;/DataElement&gt;
           &lt;/SerializableData&gt;
           &lt;SerializableData name="INPUT_MODE"&gt;
-            &lt;DataElement key="Checked" value="True"&gt;
+            &lt;DataElement key="Checked" value="False"&gt;
             &lt;/DataElement&gt;
           &lt;/SerializableData&gt;
           &lt;SerializableData name="OUTPUT_MODE"&gt;
@@ -3952,7 +4015,7 @@ cg_src
         &lt;SerializableData name="cmbFlag"&gt;
           &lt;DataElement key="ContentItemCount" value="2"&gt;
           &lt;/DataElement&gt;
-          &lt;DataElement key="SelectedContentItem" value="unused"&gt;
+          &lt;DataElement key="SelectedContentItem" value="used"&gt;
           &lt;/DataElement&gt;
           &lt;SerializableData name="ContentItem1"&gt;
             &lt;DataElement key="Pin" value=""&gt;
@@ -4148,7 +4211,7 @@ cg_src
           &lt;/DataElement&gt;
         &lt;/SerializableData&gt;
         &lt;SerializableData name="KR1_USED"&gt;
-          &lt;DataElement key="Checked" value="False"&gt;
+          &lt;DataElement key="Checked" value="True"&gt;
           &lt;/DataElement&gt;
         &lt;/SerializableData&gt;
         &lt;SerializableData name="KR2_USED"&gt;
