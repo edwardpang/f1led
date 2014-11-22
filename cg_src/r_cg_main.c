@@ -77,6 +77,8 @@ typedef enum {
 	APP_STATE_POST_CALIBRATION,
 	APP_STATE_MODE_1,
 	APP_STATE_MODE_2,
+	APP_STATE_MODE_3,
+	APP_STATE_MODE_4,
 	APP_STATE_HALT,
 	APP_STATE_NUM
 } eAppState;
@@ -182,7 +184,7 @@ void main(void)
 					state = APP_STATE_MODE_1;
 				}
 				break;
-				
+			
 			case APP_STATE_MODE_1:
 				if (!u16SwTimerCnt_LedBlink) {
 					if (bPolarity) {
@@ -214,6 +216,7 @@ void main(void)
 				if (bModeToggleFlag) {
 					bModeToggleFlag = false;
 					state = APP_STATE_MODE_2;
+					R_KEY_Start ( );
 				}	
 				break;
 				
@@ -258,8 +261,28 @@ void main(void)
 					bModeToggleFlag = false;
 					u16SwTimerCnt_LedBlink = TIME_PERIOD_SPEED_PATTERN_1;
 					state = APP_STATE_MODE_1;
+					R_KEY_Start ( );
 				}	
 				break;
+		
+			case APP_STATE_MODE_3:
+				LED_PORT = LED_OFF;
+				if (bModeToggleFlag) {
+					bModeToggleFlag = false;
+					state = APP_STATE_MODE_4;
+					R_KEY_Start ( );
+				}
+				break;
+
+			case APP_STATE_MODE_4:
+				LED_PORT = LED_ON;
+				if (bModeToggleFlag) {
+					bModeToggleFlag = false;
+					state = APP_STATE_MODE_3;
+					R_KEY_Start ( );
+				}
+				break;
+
 				
 			case APP_STATE_HALT:
 				LED_PORT = LED_ON;
@@ -300,6 +323,7 @@ void R_MAIN_UserInit(void)
 	R_TAU0_Channel0_Start ( );
 	R_TAU0_Channel1_Start ( );
 	state = APP_STATE_PRE_CALIBRATION;
+	//state = APP_STATE_MODE_3;
 	/* End user code. Do not edit comment generated here */
 }
 

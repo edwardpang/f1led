@@ -154,6 +154,7 @@
       <RelativePath>cg_src\r_cg_key.h</RelativePath>
       <TreeImageGuid>03cad1e8-2eb3-4cde-a8a3-982423631122</TreeImageGuid>
       <ParentItem>00cfdea5-e06b-43ef-8dd4-b6007272f06b</ParentItem>
+      <Property>95abe4dc-8ef8-4602-a146-4e23171bd52b</Property>
     </Instance>
   </Class>
   <Class Guid="fb98844b-2c27-4275-9804-f6e63e204da0">
@@ -199,6 +200,9 @@
       <MemoCount>0</MemoCount>
     </Instance>
     <Instance Guid="0c65da8e-3ad2-4fe8-8ca7-e111d8f37940">
+      <MemoCount>0</MemoCount>
+    </Instance>
+    <Instance Guid="95abe4dc-8ef8-4602-a146-4e23171bd52b">
       <MemoCount>0</MemoCount>
     </Instance>
   </Class>
@@ -547,7 +551,7 @@ cg_src
       <ReserveWorkingMemoryForRrmDmm-DefaultValue>False</ReserveWorkingMemoryForRrmDmm-DefaultValue>
       <StartAddressOfWorkingMemoryForRrmDmm-DefaultValue />
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8587853805754106774</TimeTagModified--0>
+      <TimeTagModified--0>-8587849798228164227</TimeTagModified--0>
       <DebugInformation-0>True</DebugInformation-0>
       <ErrorListFile-0>False</ErrorListFile-0>
       <LibraryFiles-0 />
@@ -569,11 +573,11 @@ cg_src
       <SystemLibraryPaths-0 />
       <MapList-0>True</MapList-0>
       <FeedControlCode-0>False</FeedControlCode-0>
-      <OnChipDebugOptionBytes-0>True</OnChipDebugOptionBytes-0>
+      <OnChipDebugOptionBytes-0>False</OnChipDebugOptionBytes-0>
       <OnChipDebugOptionBytesValue-0>05</OnChipDebugOptionBytesValue-0>
       <StartAddressOfOnChipDebugOptionBytes-0>600</StartAddressOfOnChipDebugOptionBytes-0>
       <SizeOfOnChipDebugOptionBytesArea-0>512</SizeOfOnChipDebugOptionBytesArea-0>
-      <UserOptionBytes-0>False</UserOptionBytes-0>
+      <UserOptionBytes-0>True</UserOptionBytes-0>
       <UserOptionBytesValue-0>EFE3F9</UserOptionBytesValue-0>
       <MirrorSourceArea-0>Maa0</MirrorSourceArea-0>
       <NumberOfLinesPerPage-0>0</NumberOfLinesPerPage-0>
@@ -604,7 +608,7 @@ cg_src
       <NumberOfLinesPerPage-DefaultValue>0</NumberOfLinesPerPage-DefaultValue>
       <RomizeAreaSize-DefaultValue />
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8587873548313377377</TimeTagModified--0>
+      <TimeTagModified--0>-8587849798686314460</TimeTagModified--0>
       <ErrorListFile-0>False</ErrorListFile-0>
       <LinkMapFile-0>True</LinkMapFile-0>
       <PreRomizeCommands-0 />
@@ -690,7 +694,7 @@ cg_src
       <VariableInformationFolder-DefaultValue>%BuildModeName%</VariableInformationFolder-DefaultValue>
       <VariableInformationFileName-DefaultValue>%ProjectName%.vfi</VariableInformationFileName-DefaultValue>
       <IsLockedByUser>False</IsLockedByUser>
-      <TimeTagModified--0>-8587853805754106774</TimeTagModified--0>
+      <TimeTagModified--0>-8587849798228164227</TimeTagModified--0>
       <Margin-0>0</Margin-0>
       <OutputRomRamUsage-0>False</OutputRomRamUsage-0>
       <VariableInformationFile-0>False</VariableInformationFile-0>
